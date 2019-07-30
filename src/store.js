@@ -1,7 +1,10 @@
 import { createStore } from 'redux';
-
+import score from './score';
 export const initState = {
+  secret: [0,0,2,3],
   code: [1, 2, 3, 4],
+  guesses: [],
+  scores:[],
 };
 
 export const reducers = {
@@ -9,6 +12,19 @@ export const reducers = {
     ...state,
     code: action.payload,
   }),
+  guess: (state,action)=>({
+    ...state,
+    guesses: [...state.guesses,state.code],
+    scores:  [...state.scores, score(state.secret)(state.code)]
+  }),
+
+  newGame: (state,action)=>({
+    ...state,
+    scores:[],
+    guesses:[],
+    secret: [1,2,3,4].map(()=> Math.floor(Math.random()*6))
+
+  })
 };
 
 export const actions = {
@@ -16,6 +32,10 @@ export const actions = {
     type: 'setCode',
     payload: code,
   }),
+
+  guess:()=>({type:'guess'}),
+  newGame:()=>({type:'newGame'}),
+
 };
 
 export const identity = i => i;
